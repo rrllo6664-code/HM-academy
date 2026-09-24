@@ -115,63 +115,76 @@
     </form>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  }<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // إعدادات التخزين السحابي الخاصة بمشروع HM-Academy
-    const firebaseConfig = {
-      apiKey: "AIzaSyAUDwLuk9aSRN3V-3tEvkSScP8rcivsM8",
-      authDomain: "hm-academy.firebaseapp.com",
-      projectId: "hm-academy",
-      storageBucket: "hm-academy.firebasestorage.app",
-      messagingSenderId: "629027258286",
-      appId: "1:629027258286:web:9422a116b64a6ed1c2923f"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyAUDwLuk9aSRN3V-3tEvkSScP8rcivsM8",
+    authDomain: "hm-academy.firebaseapp.com",
+    projectId: "hm-academy",
+    storageBucket: "hm-academy.firebasestorage.app",
+    messagingSenderId: "629027258286",
+    appId: "1:629027258286:web:9422a116b64a6ed1c2923f"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    const loginForm = document.getElementById('loginForm');
-    const errorText = document.getElementById('errorText');
-    const submitBtn = document.getElementById('submitBtn');
+  // تحديد بريد ناشر المحتوى / المسؤول
+  const ADMIN_EMAIL = "rrllo6664@gmail.com"; 
 
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      if (!email || !password) {
-        errorText.style.display = 'block';
-        errorText.innerText = "يرجى إدخال البريد الإلكتروني وكلمة المرور.";
-        return;
+  const loginForm = document.getElementById('loginForm');
+  const errorText = document.getElementById('errorText');
+  const submitBtn = document.getElementById('submitBtn');
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const password = document.getElementById('password').value;
+
+    if (!email || !password) {
+      errorText.style.display = 'block';
+      errorText.innerText = "يرجى إدخال البريد الإلكتروني وكلمة المرور.";
+      return;
+    }
+
+    errorText.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'جاري التحقق...';
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // التوجيه الذكي حسب نوع البريد الإلكتروني
+      if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+        alert("أهلاً بك يا ناشر المحتوى! جاري التوجيه للوحة التحكم...");
+        window.location.replace("admin.html"); // صفحة إضافة ونشر المحتوى
+      } else {
+        alert("تم تسجيل الدخول بنجاح!");
+        window.location.replace("index.html"); // صفحة الطلاب والدروس
       }
 
-      errorText.style.display = 'none';
-      submitBtn.disabled = true;
-      submitBtn.innerText = 'جاري التحقق...';
+    } catch (error) {
+      submitBtn.disabled = false;
+      submitBtn.innerText = 'تسجيل الدخول';
+      errorText.style.display = 'block';
 
-   try {
-        await signInWithEmailAndPassword(auth, email, password);
-        window.location.replace("index.html");
-      } catch (error) {
-        submitBtn.disabled = false;
-        submitBtn.innerText = 'تسجيل الدخول';
-        errorText.style.display = 'block';
-
-        if (error.code === 'auth/network-request-failed') {
-          errorText.innerText = "فشل الاتصال بالسيرفر. يرجى التأكد من تشغيل VPN أو استقرار شبكة الإنترنت.";
-        } else if (
-          error.code === 'auth/invalid-credential' || 
-          error.code === 'auth/user-not-found' || 
-          error.code === 'auth/wrong-password'
-        ) {
-          errorText.innerText = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-        } else {
-          errorText.innerText = "حدث خطأ في الاتصال: " + error.message;
-        }
+      if (error.code === 'auth/network-request-failed') {
+        errorText.innerText = "فشل الاتصال بالسيرفر. يرجى التأكد من تشغيل VPN أو استقرار الإنترنت.";
+      } else if (
+        error.code === 'auth/invalid-credential' || 
+        error.code === 'auth/user-not-found' || 
+        error.code === 'auth/wrong-password'
+      ) {
+        errorText.innerText = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+      } else {
+        errorText.innerText = "حدث خطأ: " + error.message;
       }
-    });
-  </script>
+    }
+  });
+</script>
 </body>
 </html>
