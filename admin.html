@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - منصة H.m</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+        --bg-dark: #0f172a;
+        --bg-card: #1e293b;
+        --primary: #38bdf8;
+        --primary-hover: #0284c7;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --danger: #ef4444;
+        --danger-bg: rgba(239, 68, 68, 0.15);
+        --border-color: #334155;
+        --success: #22c55e;
+    }
+
+    body {
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+        display: flex;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* Keyframes */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideRight {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    .sidebar {
+        width: 260px;
+        background-color: var(--bg-card);
+        border-left: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
+        flex-shrink: 0;
+        animation: slideRight 0.6s ease-out;
+    }
+
+    .sidebar .brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary);
+        margin-bottom: 40px;
+    }
+
+    .sidebar-menu a, .sidebar-menu button {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        color: var(--text-muted);
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        background: transparent;
+        border: none;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-menu a:hover {
+        background-color: rgba(56, 189, 248, 0.1);
+        color: var(--primary);
+        transform: translateX(-5px);
+    }
+
+    .main-content {
+        flex-grow: 1;
+        padding: 35px;
+        overflow-y: auto;
+        animation: fadeInUp 0.7s ease-out;
+    }
+
+    .stat-card {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        padding: 20px;
+        border-radius: 12px;
+        transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary);
+    }
+
+    .panel {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--primary);
+        color: var(--bg-dark);
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+    }
+
+    .lesson-item {
+        background-color: var(--bg-dark);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.3s ease;
+        animation: fadeInUp 0.4s ease-out;
+    }
+
+    .lesson-item:hover {
+        border-color: var(--primary);
+        transform: scale(1.01);
+    }
+    .form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.form-group input, 
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.form-group input:focus, 
+.form-group textarea:focus {
+    border-color: #38bdf8;
+}
+</style>
+  
+
+    
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand">H.m Admin</div>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active">لوحة التحكم</a></li>
+            <li><a href="index.html" target="_blank">معاينة صفحة الطلاب ↗</a></li>
+            <li><button type="button" id="logoutBtn" class="logout-btn">تسجيل الخروج</button></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header class="header-bar">
+            <h1>إدارة الدروس المصورة</h1>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">إضافة وحذف دروس منصة H.m التعليمية</p>
+        </header>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>إجمالي الدروس المنشورة</h3>
+                <div class="number" id="totalLessonsCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>حالة المنصة</h3>
+                <div class="number" style="color: var(--success); font-size: 1.3rem;">نشطة الآن ✓</div>
+            </div>
+            <div class="stat-card">
+                <h3>صلاحية الحساب</h3>
+                <div class="number" style="font-size: 1.3rem;">مدير النظام (Admin)</div>
+            </div>
+        </section>
+        <div class="dashboard-grid">
+            <section class="panel">
+                <h2 class="panel-title">نشر درس جديد</h2>
+                <form id="addLessonForm">
+                    <div class="form-group">
+                        <label for="lessonTitle">عنوان الدرس</label>
+                        <input type="text" id="lessonTitle" placeholder="مثال: أساسيات الشبكات TCP/IP" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lessonDesc">وصف مختصر للدرس</label>
+                        <textarea id="lessonDesc" rows="3" placeholder="شرح مختصر لمحتوى الفيديو..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="videoUrl">رابط فيديو YouTube</label>
+                        <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">نشر الدرس فوراً</button>
+                </form>
+            </section>
+
+            <section class="panel">
+                <h2 class="panel-title">الدروس المنشورة</h2>
+                <div id="adminLessonsList" class="lessons-list"></div>
+            </section>
+        </div>
+    </main>
+
+    <script src="admin.js"></script>
+</body>
+</html>
