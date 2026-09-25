@@ -327,16 +327,33 @@
         &copy; 2026 منصة H.m التعليمية - جميع الحقوق محفوظة.
     </footer>
 
+    <!-- ربط Supabase والتحقق من الجلسة الحقيقية -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        // استبدل بنفس معلومات Supabase التي وضعتها في صفحة Login.html
+        const SUPABASE_URL = 'https://lmlvftoslssbwnoahgxh.supabase.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_0Jltboo6CsmJRLntCtlysw_SltMc7Tb';
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // التحقق من الحماية: هل المستخدم مسجل دخول عبر Supabase؟
+        async function checkAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.replace("Login.html");
+            }
+        }
+        checkAuth();
+
+        // دالة تسجيل الخروج المتوافقة مع Supabase
+        window.logoutStudent = async function() {
+            await supabase.auth.signOut();
+            window.location.replace("Login.html");
+        }
+    </script>
+
     <script>
-        if (localStorage.getItem("isLoggedIn") !== "true") {
-            window.location.href = "login.html";
-        }
-
-        function logoutStudent() {
-            localStorage.clear();
-            window.location.href = "login.html";
-        }
-
         function getLessons() {
             var saved = localStorage.getItem("h_m_lessons");
             if (saved) {
@@ -357,7 +374,6 @@
             iframe.style.display = 'block';
             placeholder.style.display = 'none';
 
-            // إضافة انميشن عند التبديل بين العناوين
             detailsBox.style.opacity = '0';
             setTimeout(function() {
                 titleEl.textContent = lesson.title;
@@ -385,12 +401,12 @@
             lessons.forEach(function(lesson, index) {
                 var card = document.createElement('div');
                 card.className = 'lesson-card';
-      card.style.animationDelay = (index * 0.1) + 's';
-card.innerHTML = '<svg class="play-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>' +
-    '<div class="lesson-card-info">' +
-        '<h4>' + lesson.title + '</h4>' +
-        '<p>' + lesson.desc + '</p>' +
-    '</div>';
+                card.style.animationDelay = (index * 0.1) + 's';
+                card.innerHTML = '<svg class="play-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>' +
+                    '<div class="lesson-card-info">' +
+                        '<h4>' + lesson.title + '</h4>' +
+                        '<p>' + lesson.desc + '</p>' +
+                    '</div>';
 
                 card.addEventListener('click', function() {
                     playLesson(lesson, card);
@@ -404,26 +420,5 @@ card.innerHTML = '<svg class="play-icon" viewBox="0 0 24 24"><path d="M12 2C6.48
             });
         });
     </script>
-    <script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-  
-  // ضع هنا نفس الرابط والمفتاح اللذين استخدمتهما في صفحة تسجيل الدخول
-  const SUPABASE_URL = 'رابط_مشروعك_هنا';
-  const SUPABASE_ANON_KEY = 'المفتاح_هنا';
-  
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // الكود يتحقق: هل يوجد مستخدم مسجل دخول؟
-  const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    // إذا لم يكن مسجلاً، قم بإعادته بقوة إلى صفحة الـ Login
-    if (!session) {
-      window.location.replace("Login.html");
-    }
-  };
-
-  checkAuth();
-</script>
 </body>
 </html>
