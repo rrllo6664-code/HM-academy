@@ -404,5 +404,26 @@ card.innerHTML = '<svg class="play-icon" viewBox="0 0 24 24"><path d="M12 2C6.48
             });
         });
     </script>
+    <script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+  
+  // ضع هنا نفس الرابط والمفتاح اللذين استخدمتهما في صفحة تسجيل الدخول
+  const SUPABASE_URL = 'رابط_مشروعك_هنا';
+  const SUPABASE_ANON_KEY = 'المفتاح_هنا';
+  
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // الكود يتحقق: هل يوجد مستخدم مسجل دخول؟
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    // إذا لم يكن مسجلاً، قم بإعادته بقوة إلى صفحة الـ Login
+    if (!session) {
+      window.location.replace("Login.html");
+    }
+  };
+
+  checkAuth();
+</script>
 </body>
 </html>
