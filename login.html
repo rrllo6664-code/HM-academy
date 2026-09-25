@@ -3,77 +3,285 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HM-Academy | تسجيل الدخول</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>HM-academy - تسجيل الدخول</title>
+  <!-- استدعاء خطوط وأيقونات عصرية -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
     }
-    .animate-fade-in {
-      animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    body {
+      background: #090d16;
+      background-image: 
+        radial-gradient(at 10% 20%, rgba(14, 165, 233, 0.15) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(99, 102, 241, 0.15) 0px, transparent 50%);
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* خلفية متحركة جمالية */
+    .bg-shapes div {
+      position: absolute;
+      filter: blur(80px);
+      z-index: -1;
+      opacity: 0.4;
+      animation: float 10s infinite alternate;
+    }
+    .shape-1 {
+      top: -10%;
+      right: -10%;
+      width: 350px;
+      height: 350px;
+      background: #0284c7;
+      border-radius: 50%;
+    }
+    .shape-2 {
+      bottom: -10%;
+      left: -10%;
+      width: 350px;
+      height: 350px;
+      background: #7c3aed;
+      border-radius: 50%;
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(20px) scale(1.05); }
+    }
+
+    /* بطاقة الدخول بتأثير الزجاج */
+    .login-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 45px 35px;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* أيقونة الشعار */
+    .brand-icon {
+      width: 65px;
+      height: 65px;
+      background: linear-gradient(135deg, #0284c7, #7c3aed);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 28px;
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(2, 132, 199, 0.3);
+    }
+
+    .login-card h2 {
+      margin-bottom: 8px;
+      color: #f8fafc;
+      font-size: 1.7rem;
+      font-weight: 700;
+    }
+
+    .login-card p {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: right;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper i {
+      position: absolute;
+      right: 14px;
+      color: #64748b;
+      transition: color 0.3s;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 13px 45px 13px 40px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background-color: rgba(15, 23, 42, 0.6);
+      color: #ffffff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      border-color: #38bdf8;
+      background-color: rgba(15, 23, 42, 0.9);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+    }
+
+    .form-group input:focus + i {
+      color: #38bdf8;
+    }
+
+    /* زر إظهار/إخفاء كلمة المرور */
+    .toggle-password {
+      position: absolute;
+      left: 14px;
+      cursor: pointer;
+      color: #64748b;
+      transition: color 0.3s;
+    }
+    .toggle-password:hover {
+      color: #cbd5e1;
+    }
+
+    /* زر الدخول */
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+      background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .btn-login:disabled {
+      background: #475569;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* رسالة الخطأ */
+    .error-msg {
+      background-color: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      font-size: 0.85rem;
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      line-height: 1.4;
+      animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4 font-sans antialiased selection:bg-indigo-500 selection:text-white">
+<body>
 
-  <!-- خلفية تفاعلية بلمسات تدرج ناعم -->
-  <div class="fixed inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute -top-40 -right-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
-    <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-violet-600/20 rounded-full blur-3xl"></div>
+  <!-- خلفية تفاعلية -->
+  <div class="bg-shapes">
+    <div class="shape-1"></div>
+    <div class="shape-2"></div>
   </div>
 
-  <!-- كارت تسجيل الدخول -->
-  <div class="w-full max-w-md bg-slate-900/80 backdrop-blur-xl border border-slate-800 p-8 rounded-3xl shadow-2xl animate-fade-in relative z-10">
-    
-    <!-- الشعار والترويسة -->
-    <div class="text-center mb-8">
-      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-violet-500 mb-4 shadow-lg shadow-indigo-500/30">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
-        </svg>
-      </div>
-      <h1 class="text-2xl font-bold tracking-tight text-white">HM-Academy</h1>
-      <p class="text-slate-400 text-sm mt-1">مرحباً بك، يرجى تسجيل الدخول للمتابعة</p>
+  <div class="login-card">
+    <div class="brand-icon">
+      <i class="fa-solid fa-graduation-cap"></i>
     </div>
+    <h2>أكاديمية HM</h2>
+    <p>تسجيل الدخول إلى المنصة التعليمية</p>
 
-    <!-- رسائل الخطأ والتنبيهات -->
-    <div id="alertBox" class="hidden mb-6 p-4 rounded-xl text-sm transition-all duration-300"></div>
-
-    <!-- نموذج الدخول -->
-    <form id="loginForm" class="space-y-5">
-      <div>
-        <label for="username" class="block text-sm font-medium text-slate-300 mb-2">اسم المستخدم</label>
-        <div class="relative">
-          <input type="text" id="username" required placeholder="أدخل اسم المستخدم"
-            class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/80 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-slate-100 placeholder-slate-500 text-sm">
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label for="email">البريد الإلكتروني</label>
+        <div class="input-wrapper">
+          <input type="email" id="email" placeholder="example@domain.com" autocomplete="email" required>
+          <i class="fa-regular fa-envelope"></i>
         </div>
       </div>
 
-      <div>
-        <label for="password" class="block text-sm font-medium text-slate-300 mb-2">كلمة المرور</label>
-        <div class="relative">
-          <input type="password" id="password" required placeholder="••••••••"
-            class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/80 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-slate-100 placeholder-slate-500 text-sm">
+      <div class="form-group">
+        <label for="password">كلمة المرور</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
+          <i class="fa-solid fa-lock"></i>
+          <i class="fa-regular fa-eye toggle-password" id="togglePassword"></i>
         </div>
       </div>
 
-      <button type="submit" id="submitBtn"
-        class="w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white font-medium rounded-xl shadow-lg shadow-indigo-600/25 transition-all duration-200 flex items-center justify-center">
+      <button type="submit" class="btn-login" id="submitBtn">
         <span>تسجيل الدخول</span>
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
       </button>
+      
+      <div id="errorText" class="error-msg"></div>
     </form>
   </div>
 
-  <!-- Firebase Modular SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-   // إعدادات مشروع HM-Academy
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    // إعدادات التخزين السحابي الخاصة بمشروع HM-Academy
     const firebaseConfig = {
-      apiKey: "AIzaSyAUdwLuk9aSRN3V-3tEvksSicP8rcivsM8",
+      apiKey: "AIzaSyAUDwLuk9aSRN3V-3tEvkSScP8rcivsM8",
       authDomain: "hm-academy.firebaseapp.com",
       projectId: "hm-academy",
       storageBucket: "hm-academy.firebasestorage.app",
@@ -82,78 +290,59 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    const loginForm = document.getElementById("loginForm");
-    const alertBox = document.getElementById("alertBox");
-    const submitBtn = document.getElementById("submitBtn");
+    const loginForm = document.getElementById('loginForm');
+    const errorText = document.getElementById('errorText');
+    const submitBtn = document.getElementById('submitBtn');
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
 
-    function showAlert(message, type = "error") {
-      alertBox.classList.remove("hidden", "bg-red-500/10", "text-red-400", "border-red-500/20", "bg-emerald-500/10", "text-emerald-400", "border-emerald-500/20");
-      if (type === "error") {
-        alertBox.classList.add("bg-red-500/10", "text-red-400", "border", "border-red-500/20");
-      } else {
-        alertBox.classList.add("bg-emerald-500/10", "text-emerald-400", "border", "border-emerald-500/20");
-      }
-      alertBox.textContent = message;
-    }
+    // تفعيل زر إظهار/إخفاء كلمة المرور
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePassword.classList.toggle('fa-eye');
+      togglePassword.classList.toggle('fa-eye-slash');
+    });
 
-    loginForm.addEventListener("submit", async (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const usernameInput = document.getElementById("username").value.trim();
-      const passwordInput = document.getElementById("password").value;
+      const email = document.getElementById('email').value.trim();
+      const password = passwordInput.value;
 
+      if (!email || !password) {
+        errorText.style.display = 'block';
+        errorText.innerText = "يرجى إدخال البريد الإلكتروني وكلمة المرور.";
+        return;
+      }
+
+      errorText.style.display = 'none';
       submitBtn.disabled = true;
-      submitBtn.innerHTML = 
-        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        جاري التحقق...
-      ;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
 
       try {
-        // البحث عن المستند الذي يطابق اسم المستخدم في مجموعة "users"
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, where("username", "==", usernameInput));
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-          showAlert("اسم المستخدم أو كلمة المرور غير صحيحة");
-        } else {
-          let userFound = false;
-          querySnapshot.forEach((doc) => {
-            const userData = doc.data();
-            
-            // التحقق من كلمة المرور
-            if (userData.password === passwordInput) {
-              userFound = true;
-              showAlert("تم تسجيل الدخول بنجاح! جاري التوجيه...", "success");
-
-              // التوجيه حسب الدور (Role)
-              setTimeout(() => {
-                if (userData.role === "admin") {
-                  window.location.href = "admin.html";
-                } else {
-                  window.location.href = "index.html";
-                }
-              }, 1200);
-            }
-          });
-
-          if (!userFound) {
-            showAlert("اسم المستخدم أو كلمة المرور غير صحيحة");
-          }
-        }
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.replace("index.html");
       } catch (error) {
-        console.error(error);
-        showAlert("حدث خطأ أثناء الاتصال بقاعدة البيانات. الرجاء المحاولة لاحقاً.");
-      } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = "تسجيل الدخول";
+        submitBtn.innerHTML = '<span>تسجيل الدخول</span><i class="fa-solid fa-arrow-right-to-bracket"></i>';
+        errorText.style.display = 'block';
+
+        if (error.code === 'auth/network-request-failed') {
+          errorText.innerText = "فشل الاتصال بالسيرفر. يرجى التأكد من تشغيل VPN أو استقرار شبكة الإنترنت.";
+        } else if (
+          error.code === 'auth/invalid-credential' || 
+          error.code === 'auth/user-not-found' || 
+          error.code === 'auth/wrong-password'
+        ) {
+          errorText.innerText = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+        } else {
+          errorText.innerText = "حدث خطأ في الاتصال: " + error.message;
+        }
       }
     });
   </script>
 </body>
-</html> 
+</html>
