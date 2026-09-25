@@ -86,7 +86,6 @@
       }
     }
 
-    /* أيقونة الشعار */
     .brand-icon {
       width: 65px;
       height: 65px;
@@ -163,7 +162,6 @@
       color: #38bdf8;
     }
 
-    /* زر إظهار/إخفاء كلمة المرور */
     .toggle-password {
       position: absolute;
       left: 14px;
@@ -175,7 +173,6 @@
       color: #cbd5e1;
     }
 
-    /* زر الدخول */
     .btn-login {
       width: 100%;
       padding: 14px;
@@ -198,11 +195,6 @@
     .btn-login:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
-      background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
-    }
-
-    .btn-login:active {
-      transform: translateY(0);
     }
 
     .btn-login:disabled {
@@ -212,7 +204,6 @@
       box-shadow: none;
     }
 
-    /* رسالة الخطأ */
     .error-msg {
       background-color: rgba(239, 68, 68, 0.1);
       border: 1px solid rgba(239, 68, 68, 0.3);
@@ -223,19 +214,11 @@
       border-radius: 10px;
       display: none;
       line-height: 1.4;
-      animation: shake 0.4s ease-in-out;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
     }
   </style>
 </head>
 <body>
 
-  <!-- خلفية تفاعلية -->
   <div class="bg-shapes">
     <div class="shape-1"></div>
     <div class="shape-2"></div>
@@ -275,22 +258,15 @@
     </form>
   </div>
 
+  <!-- سكربت الاتصال بقاعدة بيانات Supabase ونظام المصادقة -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // إعدادات التخزين السحابي الخاصة بمشروع HM-Academy
-    const firebaseConfig = {
-      apiKey: "AIzaSyAUDwLuk9aSRN3V-3tEvkSScP8rcivsM8",
-      authDomain: "hm-academy.firebaseapp.com",
-      projectId: "hm-academy",
-      storageBucket: "hm-academy.firebasestorage.app",
-      messagingSenderId: "629027258286",
-      appId: "1:629027258286:web:9422a116b64a6ed1c2923f"
-    };
+    // استبدل القيم أدناه برابط مشروعك و الـ Publishable key الخاص بك من لوحة تحكم Supabase
+    const SUPABASE_URL = 'https://lmlvftoslssbwnoahgxh.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_0Jltboo6CsmJRLntCtlysw_SltMc7Tb';
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const loginForm = document.getElementById('loginForm');
     const errorText = document.getElementById('errorText');
@@ -298,7 +274,7 @@
     const passwordInput = document.getElementById('password');
     const togglePassword = document.getElementById('togglePassword');
 
-    // تفعيل زر إظهار/إخفاء كلمة المرور
+    // تفعيل زر إظهار وإخفاء كلمة المرور
     togglePassword.addEventListener('click', () => {
       const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
       passwordInput.setAttribute('type', type);
@@ -323,24 +299,22 @@
       submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
 
       try {
-        await signInWithEmailAndPassword(auth, email, password);
+        // تنفيذ عملية تسجيل الدخول عبر Supabase Auth
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password,
+        });
+
+        if (error) throw error;
+
+        // في حال النجاح يتم التوجيه إلى الصفحة الرئيسية
         window.location.replace("index.html");
+
       } catch (error) {
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<span>تسجيل الدخول</span><i class="fa-solid fa-arrow-right-to-bracket"></i>';
         errorText.style.display = 'block';
-
-        if (error.code === 'auth/network-request-failed') {
-          errorText.innerText = "فشل الاتصال بالسيرفر. يرجى التأكد من تشغيل VPN أو استقرار شبكة الإنترنت.";
-        } else if (
-          error.code === 'auth/invalid-credential' || 
-          error.code === 'auth/user-not-found' || 
-          error.code === 'auth/wrong-password'
-        ) {
-          errorText.innerText = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-        } else {
-          errorText.innerText = "حدث خطأ في الاتصال: " + error.message;
-        }
+        errorText.innerText = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
       }
     });
   </script>
