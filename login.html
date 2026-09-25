@@ -133,16 +133,18 @@
       align-items: center;
     }
 
-    .input-wrapper i {
+    /* الأيقونة اليمنى (قفل أو إيميل) */
+    .input-wrapper > i:first-of-type {
       position: absolute;
       right: 14px;
       color: #64748b;
+      pointer-events: none;
       transition: color 0.3s;
     }
 
     .form-group input {
       width: 100%;
-      padding: 13px 45px 13px 40px;
+      padding: 13px 42px;
       border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       background-color: rgba(15, 23, 42, 0.6);
@@ -158,16 +160,19 @@
       box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
     }
 
-    .form-group input:focus + i {
+    .form-group input:focus ~ i:first-of-type {
       color: #38bdf8;
     }
 
+    /* أيقونة إظهار/إخفاء كلمة المرور اليسرى */
     .toggle-password {
       position: absolute;
       left: 14px;
       cursor: pointer;
       color: #64748b;
+      z-index: 5;
       transition: color 0.3s;
+      padding: 5px;
     }
     .toggle-password:hover {
       color: #cbd5e1;
@@ -262,7 +267,7 @@
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // استبدل القيم أدناه برابط مشروعك و الـ Publishable key الخاص بك من لوحة تحكم Supabase
+    // ضع بيانات مشروعك هنا
     const SUPABASE_URL = 'https://lmlvftoslssbwnoahgxh.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_0Jltboo6CsmJRLntCtlysw_SltMc7Tb';
 
@@ -299,7 +304,6 @@
       submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
 
       try {
-        // تنفيذ عملية تسجيل الدخول عبر Supabase Auth
         const { data, error } = await supabase.auth.signInWithPassword({
           email: email,
           password: password,
@@ -307,7 +311,6 @@
 
         if (error) throw error;
 
-        // في حال النجاح يتم التوجيه إلى الصفحة الرئيسية
         window.location.replace("index.html");
 
       } catch (error) {
