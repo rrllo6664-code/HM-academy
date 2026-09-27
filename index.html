@@ -277,6 +277,7 @@
             color: var(--text-muted);
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -289,120 +290,333 @@
             margin-top: auto;
         }
     </style>
+    <link rel="stylesheet" href="site.css">
 </head>
-<body>
+<body class="catalog-page">
 
     <header class="navbar">
-        <a href="index.html" class="brand">منصة H.m التعليمية</a>
-        <button onclick="logoutStudent()" class="logout-btn">تسجيل الخروج 🚪</button>
+        <a href="index.html" class="brand">
+            <span class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/><path d="M8 7h8M8 11h7"/></svg>
+            </span>
+            <span>H.M Academy<span class="brand-caption">منصة تعليمية عربية</span></span>
+        </a>
+        <nav class="nav-actions" aria-label="التنقل الرئيسي">
+            <a class="nav-link" href="#lesson-library">الدروس</a>
+            <a href="Login.html" class="logout-btn" id="studentAuthAction">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5M15 12H3"/></svg>
+                <span>تسجيل الدخول</span>
+            </a>
+        </nav>
     </header>
 
-    <div class="main-container">
-        <main class="video-section">
-            <div class="video-wrapper">
-                <div class="video-placeholder" id="placeholder">
-                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    <p>اختر درساً من القائمة لبدء المشاهدة</p>
-                </div>
-                <iframe id="mainVideoPlayer" src="" allowfullscreen style="display: none;"></iframe>
-            </div>
+    <section class="catalog-hero">
+        <div class="catalog-hero-inner">
+            <div class="hero-eyebrow">مساحة تعلّم مفتوحة</div>
+            <h1>منصة H.M التعليمية</h1>
+            <p>اختر درساً، شاهد الشرح، وواصل التعلّم على وتيرتك.</p>
+        </div>
+    </section>
 
-            <div class="video-details" id="videoDetailsBox">
-                <h2 id="currentVideoTitle">مرحباً بك في المنصة</h2>
-                <p id="currentVideoDesc">اختر أي درس من قائمة الدروس المتاحة على يسار الشاشة ليتم تشغيل الفيديو واستعراض تفاصيله.</p>
-            </div>
-        </main>
-
-        <aside class="playlist-section">
-            <div class="playlist-header">
-                <h3>قائمة الدروس</h3>
-                <span id="lessonCountBadge">0 دروس</span>
-            </div>
-
-            <div class="lessons-scroll" id="studentLessonsList"></div>
-        </aside>
-    </div>
+    <main class="main-container">
+            <section class="course-catalog" id="lesson-library" aria-labelledby="catalogHeading">
+                <div class="catalog-section-heading"><div><span class="hero-eyebrow">تعلم على خطتك</span><h2 id="catalogHeading">الدورات المتاحة</h2><p>اختر دورة مناسبة، وأدخل رمز التفعيل الذي حصلت عليه من الأستاذ.</p></div><span id="courseCountBadge" class="count-badge">جاري التحميل</span></div>
+                <div id="studentPageMessage" class="student-page-message" role="status" aria-live="polite" hidden></div>
+                <div id="studentProfilePrompt" class="student-profile-prompt" hidden></div>
+                <div id="studentEnrolledCourses" class="enrolled-courses" hidden></div>
+                <div id="publicCoursesList" class="public-course-grid" aria-live="polite"></div>
+            </section>
+    </main>
 
     <footer>
         &copy; 2026 منصة H.m التعليمية - جميع الحقوق محفوظة.
     </footer>
 
-    <script>
-        if (localStorage.getItem("isLoggedIn") !== "true") {
-            window.location.href = "login.html";
+    <script type="module">
+        import { supabase } from "./supabase.js";
+
+        var currentStudent = null;
+        var studentProfileComplete = false;
+
+        function showStudentMessage(message, state) {
+            var status = document.getElementById('studentPageMessage');
+            status.hidden = false;
+            status.className = 'student-page-message ' + (state || '');
+            status.textContent = message;
         }
 
-        function logoutStudent() {
-            localStorage.clear();
-            window.location.href = "login.html";
-        }
-
-        function getLessons() {
-            var saved = localStorage.getItem("h_m_lessons");
-            if (saved) {
-                try { return JSON.parse(saved); } catch(e) { return []; }
-            }
-            return [];
-        }
-
-        function playLesson(lesson, element) {
-            var iframe = document.getElementById('mainVideoPlayer');
-            var placeholder = document.getElementById('placeholder');
-            var titleEl = document.getElementById('currentVideoTitle');
-            var descEl = document.getElementById('currentVideoDesc');
-            var detailsBox = document.getElementById('videoDetailsBox');
-
-            iframe.style.display = 'none';
-            iframe.src = lesson.url;
-            iframe.style.display = 'block';
-            placeholder.style.display = 'none';
-
-            // إضافة انميشن عند التبديل بين العناوين
-            detailsBox.style.opacity = '0';
-            setTimeout(function() {
-                titleEl.textContent = lesson.title;
-                descEl.textContent = lesson.desc;
-                detailsBox.style.opacity = '1';
-            }, 200);
-
-            var allCards = document.querySelectorAll('.lesson-card');
-            allCards.forEach(function(card) { card.classList.remove('active'); });
-            if (element) { element.classList.add('active'); }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var lessons = getLessons();
-            var listContainer = document.getElementById('studentLessonsList');
-            var badge = document.getElementById('lessonCountBadge');
-
-            badge.textContent = lessons.length + " درس";
-
-            if (lessons.length === 0) {
-                listContainer.innerHTML = '<div style="text-align:center; color: var(--text-muted); padding: 40px;">لا توجد دروس منشورة حالياً.</div>';
-                return;
-            }
-
-            lessons.forEach(function(lesson, index) {
-                var card = document.createElement('div');
-                card.className = 'lesson-card';
-      card.style.animationDelay = (index * 0.1) + 's';
-card.innerHTML = '<svg class="play-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>' +
-    '<div class="lesson-card-info">' +
-        '<h4>' + lesson.title + '</h4>' +
-        '<p>' + lesson.desc + '</p>' +
-    '</div>';
-
-                card.addEventListener('click', function() {
-                    playLesson(lesson, card);
-                });
-
-                listContainer.appendChild(card);
-
-                if (index === 0) {
-                    playLesson(lesson, card);
+        function makeProfileForm(profile) {
+            var prompt = document.getElementById('studentProfilePrompt');
+            prompt.replaceChildren();
+            prompt.hidden = false;
+            prompt.className = 'student-profile-prompt';
+            var heading = document.createElement('h3');
+            heading.textContent = 'أكمل بيانات حسابك';
+            var explanation = document.createElement('p');
+            explanation.textContent = 'نحتاج هذه البيانات لتفعيل الدورات والتواصل بشأنها.';
+            var form = document.createElement('form');
+            form.className = 'student-profile-form';
+            [['studentName', 'الاسم الكامل', 'text', profile?.full_name || ''], ['studentPhone', 'رقم الهاتف مع مفتاح الدولة', 'tel', profile?.phone || ''], ['studentCountry', 'الدولة', 'text', profile?.country || ''], ['studentEducation', 'المرحلة أو المستوى الدراسي', 'text', profile?.education_level || '']].forEach(function(field) {
+                var label = document.createElement('label');
+                label.htmlFor = field[0];
+                label.textContent = field[1];
+                var input = document.createElement('input');
+                input.id = field[0];
+                input.type = field[2];
+                input.value = field[3];
+                input.required = true;
+                input.maxLength = 120;
+                form.append(label, input);
+            });
+            var submit = document.createElement('button');
+            submit.type = 'submit';
+            submit.className = 'btn-submit';
+            submit.textContent = 'حفظ بياناتي';
+            var status = document.createElement('div');
+            status.className = 'inline-form-status';
+            status.setAttribute('role', 'status');
+            form.append(submit, status);
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                submit.disabled = true;
+                try {
+                    var saved = await supabase.rpc('save_student_profile', {
+                        p_full_name: document.getElementById('studentName').value.trim(),
+                        p_phone: document.getElementById('studentPhone').value.trim(),
+                        p_country: document.getElementById('studentCountry').value.trim(),
+                        p_education_level: document.getElementById('studentEducation').value.trim()
+                    });
+                    if (saved.error) throw saved.error;
+                    studentProfileComplete = true;
+                    prompt.hidden = true;
+                    await renderPublicCourses();
+                } catch (error) {
+                    status.textContent = error.message;
+                    status.className = 'inline-form-status is-error';
+                } finally {
+                    submit.disabled = false;
                 }
             });
-        });
+            prompt.append(heading, explanation, form);
+        }
+
+        async function loadMyEnrollments() {
+            if (!currentStudent) return [];
+            var { data, error } = await supabase.from('enrollments').select('course_id').eq('student_id', currentStudent.id);
+            return error ? [] : (data || []).map(function(enrollment) { return enrollment.course_id; });
+        }
+
+        async function redeemCode(course, code) {
+            if (!currentStudent) {
+                window.location.href = 'Login.html';
+                return;
+            }
+            if (!studentProfileComplete) {
+                showStudentMessage('أكمل بيانات ملف الطالب أولاً، ثم أعد إدخال رمز التفعيل.', 'is-warning');
+                document.getElementById('studentProfilePrompt').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            var redeemed = await supabase.rpc('redeem_course_activation_code', { p_course_id: course.id, p_code: code.trim() });
+            if (redeemed.error) {
+                showStudentMessage(redeemed.error.message, 'is-error');
+                return;
+            }
+            showStudentMessage('تم تفعيل دورة ' + course.title + ' بنجاح.', 'is-success');
+            await renderPublicCourses();
+        }
+
+        async function openCourse(course) {
+            var [lessonResult, enrollments] = await Promise.all([
+                supabase.from('lessons').select('id, title, description, video_url').eq('course_id', course.id).order('created_at'),
+                loadMyEnrollments()
+            ]);
+            if (lessonResult.error) {
+                showStudentMessage('تعذر تحميل دروس الدورة: ' + lessonResult.error.message, 'is-error');
+                return;
+            }
+            if (!enrollments.some(function(id) { return id === course.id; })) {
+                showStudentMessage('هذه الدورة غير مفعلة في حسابك.', 'is-warning');
+                return;
+            }
+            var area = document.getElementById('studentEnrolledCourses');
+            area.replaceChildren();
+            area.hidden = false;
+            var heading = document.createElement('div');
+            heading.className = 'catalog-section-heading';
+            var titleBlock = document.createElement('div');
+            var title = document.createElement('h2');
+            title.textContent = course.title;
+            var description = document.createElement('p');
+            description.textContent = course.description;
+            titleBlock.append(title, description);
+            var close = document.createElement('button');
+            close.type = 'button';
+            close.className = 'btn-secondary';
+            close.textContent = 'إغلاق الدورة';
+            close.addEventListener('click', function() { area.hidden = true; });
+            heading.append(titleBlock, close);
+            area.appendChild(heading);
+            var layout = document.createElement('div');
+            layout.className = 'student-course-layout';
+            var player = document.createElement('section');
+            player.className = 'student-player';
+            var frame = document.createElement('iframe');
+            frame.title = 'مشغل دروس ' + course.title;
+            frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            frame.allowFullscreen = true;
+            var playerTitle = document.createElement('h3');
+            playerTitle.textContent = 'اختر درساً للبدء';
+            var playerDescription = document.createElement('p');
+            player.append(frame, playerTitle, playerDescription);
+            var lessonList = document.createElement('div');
+            lessonList.className = 'student-lesson-list';
+            if (!lessonResult.data.length) lessonList.textContent = 'لم يضف الأستاذ دروساً لهذه الدورة بعد.';
+            lessonResult.data.forEach(function(lesson) {
+                var button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'student-lesson-button';
+                var lessonTitle = document.createElement('strong');
+                lessonTitle.textContent = lesson.title;
+                var lessonDescription = document.createElement('span');
+                lessonDescription.textContent = lesson.description;
+                button.append(lessonTitle, lessonDescription);
+                button.addEventListener('click', function() {
+                    frame.src = lesson.video_url;
+                    playerTitle.textContent = lesson.title;
+                    playerDescription.textContent = lesson.description;
+                    lessonList.querySelectorAll('.student-lesson-button').forEach(function(item) { item.classList.remove('active'); });
+                    button.classList.add('active');
+                });
+                lessonList.appendChild(button);
+            });
+            layout.append(player, lessonList);
+            area.appendChild(layout);
+            area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function buildCourseCard(course, enrolled) {
+            var card = document.createElement('article');
+            card.className = 'public-course-card';
+            var image = document.createElement(course.cover_url ? 'img' : 'div');
+            image.className = course.cover_url ? 'public-course-cover' : 'public-course-cover public-course-cover-placeholder';
+            if (course.cover_url) {
+                image.src = course.cover_url;
+                image.alt = 'غلاف دورة ' + course.title;
+                image.loading = 'lazy';
+            } else {
+                image.setAttribute('role', 'img');
+                image.setAttribute('aria-label', 'غلاف بديل لدورة ' + course.title);
+            }
+            var body = document.createElement('div');
+            body.className = 'public-course-body';
+            var heading = document.createElement('h3');
+            heading.textContent = course.title;
+            var description = document.createElement('p');
+            description.textContent = course.description;
+            var footer = document.createElement('div');
+            footer.className = 'public-course-footer';
+            var action = document.createElement('button');
+            action.type = 'button';
+            action.className = enrolled ? 'btn-secondary' : 'btn-submit';
+            action.textContent = enrolled ? 'دخول الدورة' : 'لدي رمز تفعيل';
+            footer.append(action);
+            body.append(heading, description, footer);
+            if (enrolled) {
+                action.addEventListener('click', function() { openCourse(course); });
+            } else {
+                var codeForm = document.createElement('form');
+                codeForm.className = 'activation-entry';
+                codeForm.hidden = true;
+                var codeInput = document.createElement('input');
+                codeInput.type = 'text';
+                codeInput.autocomplete = 'one-time-code';
+                codeInput.placeholder = 'XXXX-XXXX-XXXX';
+                codeInput.setAttribute('aria-label', 'رمز تفعيل ' + course.title);
+                codeInput.required = true;
+                codeInput.maxLength = 20;
+                codeInput.dir = 'ltr';
+                var activate = document.createElement('button');
+                activate.type = 'submit';
+                activate.className = 'btn-secondary';
+                activate.textContent = 'تفعيل';
+                codeForm.append(codeInput, activate);
+                codeForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    activate.disabled = true;
+                    await redeemCode(course, codeInput.value);
+                    activate.disabled = false;
+                });
+                action.addEventListener('click', function() {
+                    if (!currentStudent) {
+                        window.location.href = 'Login.html';
+                        return;
+                    }
+                    if (!studentProfileComplete) {
+                        showStudentMessage('أكمل بيانات ملف الطالب قبل تفعيل الدورة.', 'is-warning');
+                        document.getElementById('studentProfilePrompt').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        return;
+                    }
+                    codeForm.hidden = !codeForm.hidden;
+                    if (!codeForm.hidden) codeInput.focus();
+                });
+                body.appendChild(codeForm);
+            }
+            card.append(image, body);
+            return card;
+        }
+
+        async function renderPublicCourses() {
+            var list = document.getElementById('publicCoursesList');
+            var badge = document.getElementById('courseCountBadge');
+            list.replaceChildren();
+            var result = await supabase.from('courses').select('id, title, description, cover_url').eq('published', true).order('created_at', { ascending: false });
+            if (result.error) {
+                badge.textContent = 'غير متاح';
+                showStudentMessage('تعذر تحميل الدورات. تحقق من تطبيق ملف supabase-courses-migration.sql.', 'is-error');
+                return;
+            }
+            var enrollments = await loadMyEnrollments();
+            var available = result.data || [];
+            badge.textContent = available.length + ' دورة';
+            if (!available.length) {
+                var empty = document.createElement('p');
+                empty.className = 'empty-msg';
+                empty.textContent = 'لا توجد دورات منشورة حالياً.';
+                list.appendChild(empty);
+                return;
+            }
+            available.forEach(function(course) {
+                list.appendChild(buildCourseCard(course, enrollments.some(function(id) { return id === course.id; })));
+            });
+        }
+
+        async function initializeStudentPage() {
+            var sessionResult = await supabase.auth.getSession();
+            currentStudent = sessionResult.data?.session?.user || null;
+            var authAction = document.getElementById('studentAuthAction');
+            if (currentStudent) {
+                var profileResult = await supabase.from('profiles').select('full_name, phone, country, education_level, profile_completed_at, role').eq('id', currentStudent.id).maybeSingle();
+                if (!profileResult.error && profileResult.data) {
+                    if (profileResult.data.role === 'admin') {
+                        authAction.href = 'admin.html';
+                        authAction.textContent = 'لوحة الأستاذ';
+                    } else {
+                        authAction.textContent = 'تسجيل الخروج';
+                        studentProfileComplete = Boolean(profileResult.data.profile_completed_at);
+                        if (!studentProfileComplete) makeProfileForm(profileResult.data);
+                    }
+                }
+                authAction.addEventListener('click', async function(event) {
+                    if (authAction.href.endsWith('admin.html')) return;
+                    event.preventDefault();
+                    await supabase.auth.signOut();
+                    window.location.reload();
+                });
+            }
+            await renderPublicCourses();
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeStudentPage);
     </script>
 </body>
 </html>

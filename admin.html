@@ -3,245 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - منصة H.m</title>
-    <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    :root {
-        --bg-dark: #0f172a;
-        --bg-card: #1e293b;
-        --primary: #38bdf8;
-        --primary-hover: #0284c7;
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
-        --danger: #ef4444;
-        --danger-bg: rgba(239, 68, 68, 0.15);
-        --border-color: #334155;
-        --success: #22c55e;
-    }
-
-    body {
-        background-color: var(--bg-dark);
-        color: var(--text-main);
-        display: flex;
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
-
-    /* Keyframes */
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slideRight {
-        from { opacity: 0; transform: translateX(-30px); }
-        to { opacity: 1; transform: translateX(0); }
-    }
-
-    .sidebar {
-        width: 260px;
-        background-color: var(--bg-card);
-        border-left: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        padding: 24px;
-        flex-shrink: 0;
-        animation: slideRight 0.6s ease-out;
-    }
-
-    .sidebar .brand {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: var(--primary);
-        margin-bottom: 40px;
-    }
-
-    .sidebar-menu a, .sidebar-menu button {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        color: var(--text-muted);
-        text-decoration: none;
-        border-radius: 8px;
-        font-size: 0.95rem;
-        background: transparent;
-        border: none;
-        width: 100%;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .sidebar-menu a:hover {
-        background-color: rgba(56, 189, 248, 0.1);
-        color: var(--primary);
-        transform: translateX(-5px);
-    }
-
-    .main-content {
-        flex-grow: 1;
-        padding: 35px;
-        overflow-y: auto;
-        animation: fadeInUp 0.7s ease-out;
-    }
-
-    .stat-card {
-        background-color: var(--bg-card);
-        border: 1px solid var(--border-color);
-        padding: 20px;
-        border-radius: 12px;
-        transition: transform 0.3s ease, border-color 0.3s ease;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-5px);
-        border-color: var(--primary);
-    }
-
-    .panel {
-        background-color: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 25px;
-        transition: all 0.3s ease;
-    }
-
-    .btn-submit {
-        width: 100%;
-        padding: 12px;
-        background-color: var(--primary);
-        color: var(--bg-dark);
-        border: none;
-        border-radius: 8px;
-        font-weight: bold;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .btn-submit:hover {
-        background-color: var(--primary-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
-    }
-
-    .lesson-item {
-        background-color: var(--bg-dark);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 15px;
-        transition: all 0.3s ease;
-        animation: fadeInUp 0.4s ease-out;
-    }
-
-    .lesson-item:hover {
-        border-color: var(--primary);
-        transform: scale(1.01);
-    }
-    .form-group {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.form-group label {
-    color: #94a3b8;
-    font-size: 0.9rem;
-}
-
-.form-group input, 
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    background-color: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    color: #ffffff;
-    font-size: 0.95rem;
-    outline: none;
-}
-
-.form-group input:focus, 
-.form-group textarea:focus {
-    border-color: #38bdf8;
-}
-</style>
-  
-
-    
+    <meta name="theme-color" content="#123f35">
+    <title>لوحة الأكاديمية | H.M Academy</title>
+    <link rel="stylesheet" href="site.css">
 </head>
-<body>
-
+<body class="admin-page">
     <aside class="sidebar">
-        <div class="brand">H.m Admin</div>
-        <ul class="sidebar-menu">
-            <li><a href="#" class="active">لوحة التحكم</a></li>
-            <li><a href="index.html" target="_blank">معاينة صفحة الطلاب ↗</a></li>
-            <li><button type="button" id="logoutBtn" class="logout-btn">تسجيل الخروج</button></li>
-        </ul>
+        <a class="admin-brand" href="index.html" aria-label="H.M Academy، الصفحة الرئيسية">
+            <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/><path d="M8 7h8M8 11h7"/></svg></span>
+            <span><strong>H.M Academy</strong><small>مساحة الأستاذ</small></span>
+        </a>
+        <div class="admin-nav-label">إدارة الأكاديمية</div>
+        <nav class="sidebar-menu" aria-label="قائمة الإدارة">
+            <button type="button" class="active" data-admin-tab="courses" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5z"/><path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h8M8 11h6"/></svg><span>الدورات</span><span class="nav-count" id="teacherCourseCount">0</span></button>
+            <button type="button" data-admin-tab="lessons" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h10"/><circle cx="19" cy="19" r="2"/></svg><span>الدروس</span></button>
+            <a href="index.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg><span>معاينة المنصة</span></a>
+        </nav>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-note"><span class="sidebar-note-mark" aria-hidden="true">✦</span><span>كل درس جديد<br>يفتح بابًا للتعلّم.</span></div>
+        <button type="button" id="logoutBtn" class="logout-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3"/><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/></svg><span>تسجيل الخروج</span></button>
+        <div class="sidebar-foot">H.M Academy <span>تعليم يصنع الفرق</span></div>
     </aside>
 
-    <main class="main-content">
-        <header class="header-bar">
-            <h1>إدارة الدروس المصورة</h1>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">إضافة وحذف دروس منصة H.m التعليمية</p>
+    <main class="main-content" id="dashboard">
+        <header class="admin-topbar">
+            <div class="breadcrumb"><span>الأكاديمية</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg><strong id="adminPageTitle">إدارة الدورات</strong></div>
+            <div class="admin-account"><span class="account-status-dot" aria-hidden="true"></span><span id="adminUserName">مساحة الأستاذ</span><span class="account-avatar" aria-hidden="true">أ</span></div>
         </header>
 
-        <section class="stats-grid">
-            <div class="stat-card">
-                <h3>إجمالي الدروس المنشورة</h3>
-                <div class="number" id="totalLessonsCount">0</div>
+        <div class="admin-page-heading">
+            <div><p class="admin-eyebrow">H.M ACADEMY <span></span> لوحة التحكم</p><h1 id="adminHeading">أهلًا بك، أستاذنا</h1><p id="adminPageSubtitle">أنشئ دورة جديدة أو تابع محتوى أكاديميتك.</p></div>
+            <div class="heading-date"><span class="date-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></span><span id="currentDateLabel">مساحة التعليم</span></div>
+        </div>
+
+        <div id="statusMessage" class="status-message" role="status" aria-live="polite"></div>
+
+        <section class="admin-panel active" data-admin-panel="courses">
+            <div class="admin-welcome-band">
+                <div class="welcome-copy"><span class="welcome-label">إدارة المحتوى التعليمي</span><h2>المعرفة تبدأ من هنا.</h2><p>أنشئ دوراتك، أضف دروسك، وامنح طلابك طريقًا واضحًا للتعلّم.</p></div>
+                <div class="welcome-emblem" aria-hidden="true"><svg viewBox="0 0 120 120"><path d="M20 31c14-8 28-8 40 0v57c-12-8-26-8-40 0zM100 31c-14-8-28-8-40 0v57c12-8 26-8 40 0z"/><path d="M32 44h16M32 54h16M72 44h16M72 54h16"/><circle cx="60" cy="20" r="5"/></svg></div>
+                <span class="welcome-index" aria-hidden="true">01 / ACADEMY</span>
             </div>
-            <div class="stat-card">
-                <h3>حالة المنصة</h3>
-                <div class="number" style="color: var(--success); font-size: 1.3rem;">نشطة الآن ✓</div>
+
+            <div class="stats-grid admin-stats">
+                <article class="stat-card"><span class="stat-icon courses-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5z"/><path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h8M8 11h6"/></svg></span><div><span class="stat-label">الدورات المنشورة</span><strong class="number" id="totalCoursesCount">0</strong></div><span class="stat-aside">دورة</span></article>
+                <article class="stat-card"><span class="stat-icon lessons-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14a2 2 0 0 1 2 2v14H7a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2Z"/><path d="M8 8h9M8 12h9M8 16h5"/></svg></span><div><span class="stat-label">الدروس المنشورة</span><strong class="number" id="totalLessonsCount">0</strong></div><span class="stat-aside">درس</span></article>
+                <article class="stat-card stat-card-note"><span class="stat-note-mark" aria-hidden="true">✳</span><div><span class="stat-label">مساحة متجددة</span><strong class="stat-note-title">علّم. ألهم. كرّر.</strong></div></article>
             </div>
-            <div class="stat-card">
-                <h3>صلاحية الحساب</h3>
-                <div class="number" style="font-size: 1.3rem;">مدير النظام (Admin)</div>
+
+            <div class="section-heading"><div><span class="section-kicker">مساحة العمل</span><h2>دوراتك التعليمية</h2></div><span class="section-caption">أدر المحتوى من مكان واحد</span></div>
+            <div class="dashboard-grid course-workspace">
+                <section class="panel form-panel">
+                    <div class="panel-heading"><span class="panel-step">01</span><div><h2 class="panel-title">إنشاء دورة</h2><p>ابدأ بعنوان واضح ووصف يساعد الطالب على الاختيار.</p></div></div>
+                    <form id="addCourseForm">
+                        <div class="form-group"><label for="courseTitle">اسم الدورة <span class="required-mark">*</span></label><input id="courseTitle" type="text" maxlength="100" placeholder="مثال: أساسيات البرمجة" autocomplete="off" required></div>
+                        <div class="form-group"><label for="courseDescription">وصف الدورة <span class="required-mark">*</span></label><textarea id="courseDescription" rows="3" maxlength="1000" placeholder="اكتب نبذة عمّا سيتعلمه الطالب..." required></textarea><small class="field-counter">حتى 1000 حرف</small></div>
+                        <div class="form-group"><div class="cover-label-row"><label for="courseCover">غلاف الدورة <span class="optional-mark">اختياري</span></label><small>JPG، PNG أو WebP · حتى 5 MB</small></div><label class="cover-picker" for="courseCover"><span class="cover-picker-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg></span><span class="cover-picker-copy"><strong id="coverFileLabel">اختر صورة من جهازك</strong><small>أو اتركها فارغة لإضافة الدورة دون غلاف</small></span><span class="cover-picker-action">اختيار صورة</span><input id="courseCover" type="file" accept="image/jpeg,image/png,image/webp" aria-label="اختيار صورة غلاف الدورة"></label><img id="courseCoverPreview" class="cover-preview" alt="معاينة غلاف الدورة" hidden></div>
+                        <button class="btn-submit course-submit" type="submit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>إنشاء الدورة</span></button>
+                    </form>
+                </section>
+                <section class="panel courses-panel">
+                    <div class="panel-heading list-heading"><span class="panel-step">02</span><div><h2 class="panel-title">الدورات المنشأة</h2><p>اختر دورة لإدارة الدروس ورموز التفعيل.</p></div><span id="courseListCount" class="count-badge">0</span></div>
+                    <div id="teacherCoursesList" class="teacher-course-list"><p class="empty-msg">جارٍ تحميل الدورات...</p></div>
+                </section>
+            </div>
+            <section class="panel course-tools-panel" id="courseToolsPanel" hidden>
+                <div class="panel-heading-row"><div><span class="section-kicker">إدارة التسجيل</span><h2 class="panel-title" id="managedCourseTitle">إدارة الدورة</h2><p class="muted-copy">أنشئ رمزًا مستقلًا لكل طالب؛ يظهر الرمز الجديد مرة واحدة فقط.</p></div><button type="button" id="issueCodeBtn" class="btn-secondary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>إصدار رمز جديد</button></div>
+                <div id="newCodeReveal" class="new-code-reveal" hidden><span>انسخ الرمز وأرسله للطالب الآن:</span><strong id="newCodeValue" dir="ltr"></strong><button type="button" id="copyCodeBtn" aria-label="نسخ رمز التفعيل" title="نسخ الرمز"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button></div>
+                <div class="codes-heading"><h3>رموز هذه الدورة</h3><span>تظهر حالة كل رمز فقط</span></div><div id="activationCodesList" class="activation-code-list"></div>
+            </section>
+        </section>
+
+        <section class="admin-panel" data-admin-panel="lessons" hidden>
+            <div class="admin-welcome-band lessons-welcome-band"><div class="welcome-copy"><span class="welcome-label">مكتبة الدروس</span><h2>كل فكرة تستحق درسًا.</h2><p>أضف فيديوهات YouTube إلى دوراتك ليراها الطلاب المسجلون فيها.</p></div><div class="welcome-emblem" aria-hidden="true"><svg viewBox="0 0 120 120"><rect x="19" y="28" width="82" height="64" rx="8"/><path d="m51 45 25 15-25 15z"/><path d="M30 19h60"/></svg></div><span class="welcome-index" aria-hidden="true">02 / LESSONS</span></div>
+            <div class="section-heading"><div><span class="section-kicker">محتوى الدورة</span><h2>إدارة الدروس</h2></div><span class="section-caption">الفيديوهات تظهر للطلاب المسجلين فقط</span></div>
+            <div class="dashboard-grid lesson-workspace">
+                <section class="panel form-panel">
+                    <div class="panel-heading"><span class="panel-step">01</span><div><h2 class="panel-title">إضافة درس</h2><p>اربط الدرس بالدورة المناسبة وأضف رابط الفيديو.</p></div></div>
+                    <form id="addLessonForm">
+                        <div class="form-group"><label for="lessonCourse">الدورة <span class="required-mark">*</span></label><select id="lessonCourse" required><option value="" selected disabled>اختر دورة</option></select><small id="lessonCourseHint">أنشئ دورة أولًا لتتمكن من إضافة درس.</small></div>
+                        <div class="form-group"><label for="lessonTitle">عنوان الدرس <span class="required-mark">*</span></label><input id="lessonTitle" type="text" maxlength="120" placeholder="مثال: المتغيرات وأنواع البيانات" required></div>
+                        <div class="form-group"><label for="lessonDesc">وصف مختصر <span class="required-mark">*</span></label><textarea id="lessonDesc" rows="3" maxlength="1000" placeholder="ما الفكرة الأساسية في هذا الدرس؟" required></textarea></div>
+                        <div class="form-group"><label for="videoUrl">رابط فيديو YouTube <span class="required-mark">*</span></label><input id="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." required><small>تُقبل روابط YouTube العادية وShorts.</small></div>
+                        <button class="btn-submit lesson-submit" type="submit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg><span>نشر الدرس</span></button>
+                    </form>
+                </section>
+                <section class="panel lessons-panel">
+                    <div class="panel-heading list-heading"><span class="panel-step">02</span><div><h2 class="panel-title">دروس الدورة</h2><p>استعرض الدروس أو احذف درسًا لم يعد مطلوبًا.</p></div></div>
+                    <div class="lesson-list-toolbar"><label for="lessonFilterCourse">عرض دروس:</label><select id="lessonFilterCourse" aria-label="اختر دورة لعرض دروسها"><option value="" selected disabled>اختر دورة</option></select></div>
+                    <div id="adminLessonsList" class="lessons-list"><p class="empty-msg">اختر دورة لعرض دروسها.</p></div>
+                </section>
             </div>
         </section>
-        <div class="dashboard-grid">
-            <section class="panel">
-                <h2 class="panel-title">نشر درس جديد</h2>
-                <form id="addLessonForm">
-                    <div class="form-group">
-                        <label for="lessonTitle">عنوان الدرس</label>
-                        <input type="text" id="lessonTitle" placeholder="مثال: أساسيات الشبكات TCP/IP" required>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="lessonDesc">وصف مختصر للدرس</label>
-                        <textarea id="lessonDesc" rows="3" placeholder="شرح مختصر لمحتوى الفيديو..." required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="videoUrl">رابط فيديو YouTube</label>
-                        <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." required>
-                    </div>
-
-                    <button type="submit" class="btn-submit">نشر الدرس فوراً</button>
-                </form>
-            </section>
-
-            <section class="panel">
-                <h2 class="panel-title">الدروس المنشورة</h2>
-                <div id="adminLessonsList" class="lessons-list"></div>
-            </section>
-        </div>
+        <footer class="admin-footer"><span>H.M Academy</span><span>مساحة تعليمية تنمو مع كل درس.</span></footer>
     </main>
-
-    <script src="admin.js"></script>
+    <script type="module" src="admin.js"></script>
 </body>
 </html>
