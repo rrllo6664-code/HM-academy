@@ -1031,28 +1031,6 @@ textarea:focus-visible {
     border-radius: 6px;
 }
 
-.login-page .signup-action {
-    display: block;
-    margin: 16px auto 0;
-    padding: 5px 8px;
-    border: 0;
-    background: transparent;
-    color: var(--green);
-    font-size: 0.91rem;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.login-page .signup-action:hover {
-    color: var(--forest);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-}
-
-.login-page .signup-action[hidden] {
-    display: none;
-}
-
 .login-page .back-home {
     position: fixed;
     top: 18px;
@@ -1158,14 +1136,6 @@ textarea:focus-visible {
 .login-page .btn-submit:active:not(:disabled) {
     transform: translateY(0);
     box-shadow: 0 4px 10px rgba(24, 120, 94, 0.17);
-}
-
-.login-page .signup-action {
-    transition: color 160ms ease, transform 160ms ease;
-}
-
-.login-page .signup-action:hover {
-    transform: translateY(-1px);
 }
 
 @keyframes login-shell-arrive {

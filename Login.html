@@ -325,7 +325,6 @@
 
           <button type="submit" class="btn-submit" id="submitBtn">تسجيل الدخول</button>
           <div id="errorBox" class="error-msg" role="alert"><span id="errorMsg"></span></div>
-          <button type="button" class="signup-action" id="signupBtn">إنشاء حساب طالب جديد</button>
         </form>
       </div>
       <p class="card-footer">© 2026 H.M Academy</p>
@@ -353,9 +352,7 @@
     const loginAudience = document.getElementById('loginAudience');
     const loginHeading = document.getElementById('loginHeading');
     const loginSubtitle = document.getElementById('loginSubtitle');
-    const signupBtn = document.getElementById('signupBtn');
     let loginMode = 'student';
-    let createAccount = false;
 
     document.querySelectorAll('[data-login-mode]').forEach((button) => {
       button.addEventListener('click', () => {
@@ -367,9 +364,6 @@
         });
 
         const teacherMode = loginMode === 'teacher';
-        createAccount = false;
-        signupBtn.hidden = teacherMode;
-        signupBtn.textContent = 'إنشاء حساب طالب جديد';
         submitBtn.textContent = teacherMode ? 'الدخول إلى لوحة الأستاذ' : 'تسجيل الدخول';
         loginAudience.textContent = teacherMode ? 'مساحة الأستاذ' : 'مساحة المتعلمين';
         loginHeading.textContent = teacherMode ? 'دخول الأستاذ' : 'أهلاً بعودتك';
@@ -378,18 +372,6 @@
           : 'سجّل دخولك للمتابعة إلى حسابك.';
         hideError();
       });
-    });
-
-    signupBtn.addEventListener('click', () => {
-      createAccount = !createAccount;
-      loginAudience.textContent = createAccount ? 'حساب طالب جديد' : 'مساحة المتعلمين';
-      loginHeading.textContent = createAccount ? 'أنشئ حسابك' : 'أهلاً بعودتك';
-      loginSubtitle.textContent = createAccount
-        ? 'أنشئ حساباً للبدء، ثم أكمل بياناتك عند دخول المنصة.'
-        : 'سجّل دخولك للمتابعة إلى حسابك.';
-      submitBtn.textContent = createAccount ? 'إنشاء الحساب' : 'تسجيل الدخول';
-      signupBtn.textContent = createAccount ? 'لديك حساب؟ تسجيل الدخول' : 'إنشاء حساب طالب جديد';
-      hideError();
     });
 
     function showError(msg) {
@@ -407,33 +389,11 @@
         showError("يرجى إدخال البريد الإلكتروني وكلمة المرور.");
         return;
       }
-      if (createAccount && password.length < 8) {
-        showError("يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.");
-        return;
-      }
-
       hideError();
       submitBtn.disabled = true;
       submitBtn.innerHTML = 'جاري التحقق... <span class="spinner"></span>';
 
       try {
-        if (createAccount) {
-          const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: { emailRedirectTo: new URL('Login.html', window.location.href).href }
-          });
-          if (error) throw error;
-          if (data.session) {
-            window.location.replace("index.html");
-            return;
-          }
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'إنشاء الحساب';
-          showError("تم إنشاء الحساب. راجع بريدك لتأكيده، ثم سجّل الدخول.");
-          return;
-        }
-
         const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
           email: email,
           password: password
@@ -464,7 +424,7 @@
 
       } catch (error) {
         submitBtn.disabled = false;
-        submitBtn.textContent = createAccount ? 'إنشاء الحساب' : (loginMode === 'teacher' ? 'الدخول إلى لوحة الأستاذ' : 'تسجيل الدخول');
+        submitBtn.textContent = loginMode === 'teacher' ? 'الدخول إلى لوحة الأستاذ' : 'تسجيل الدخول';
         showError(error.message || "حدث خطأ أثناء تسجيل الدخول.");
       }
     });
